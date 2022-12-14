@@ -7,8 +7,7 @@ on:
     - cron:  '0 13 * * *'
 
 jobs: 
-  autoscrape:
-    # The type of runner that the job will run on
+  autotime:
     runs-on: macos-latest
 
     # Load repo and install R
