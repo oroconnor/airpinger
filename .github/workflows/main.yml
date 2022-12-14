@@ -6,7 +6,6 @@ on:
   schedule:
     - cron:  '0 13 * * *'
 
-
 jobs: 
   autoscrape:
     # The type of runner that the job will run on
@@ -14,7 +13,7 @@ jobs:
 
     # Load repo and install R
     steps:
-#    - uses: actions/checkout@master
+      #- uses: actions/checkout@master
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@master
       
