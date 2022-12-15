@@ -9,7 +9,7 @@ on:
 
 jobs: 
   autotime:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     # Load repo and install R
     steps:
@@ -21,11 +21,12 @@ jobs:
       - name: Install packages
         run: |
           R -e 'install.packages("tidyverse")'
+          
       # Run R script
       - name: Scrape
         run: Rscript gaction_test.R
       
- # Add new files in data folder, commit along with other modified files, push
+      # Add new files in data folder, commit along with other modified files, push
       - name: Commit files
         run: |
           git config --local user.name actions-user
