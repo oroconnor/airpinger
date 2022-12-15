@@ -7,4 +7,4 @@ library(tidyverse)
 row <- data.frame(Sys.time())
 
 # append at the end of the csv the new data
-write_csv(row,paste0('/data/datetime_lister.csv'),append = T)   
+write.csv(row,'/data/datetime_lister.csv',append = T)   
