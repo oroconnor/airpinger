@@ -1,9 +1,8 @@
 # Hourly scraping
 name: sitemap_scraping
 
-# Triggers -Controls when the action will run.
+# Triggers - Controls when the action will run.
 on:
-  push:
   schedule:
     - cron:  '*/5 * * * *' # Runs every 5 minutes
 
