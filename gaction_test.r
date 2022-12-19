@@ -1,7 +1,6 @@
 #Load library
 library(tidyverse)
 
-
 # create a new row of data, with todayd's date and urls number
 row <- data.frame(Sys.time())
 
