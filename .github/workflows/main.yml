@@ -32,7 +32,6 @@ jobs:
       # Add new files in data folder, commit along with other modified files, push in same repo
       # ${GITHUB_REF##*/} - used to pick branch name automatically
       # REPO_KEY - used to authenticate push
-      # username - Name used for commit and push
       - name: Commit files
         run: |
           git pull
