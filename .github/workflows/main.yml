@@ -3,6 +3,7 @@ name: sitemap_scraping
 
 # Controls when the action will run.
 on:
+  push:
   schedule:
     - cron:  '*/5 * * * *'
 
@@ -12,26 +13,29 @@ jobs:
 
     # Load repo and install R
     steps:
-      #- uses: actions/checkout@master
-      - uses: actions/checkout@v2
-      - uses: r-lib/actions/setup-r@master
-      
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Setup R 
+        uses: r-lib/actions/setup-r@v2
+        
       # Set-up R
       - name: Install packages
         run: |
           R -e 'install.packages("tidyverse")'
+          
       # Run R script
       - name: Scrape
         run: Rscript gaction_test.R
       
- # Add new files in data folder, commit along with other modified files, push
+      # Add new files in data folder, commit along with other modified files, push
       - name: Commit files
         run: |
           git config --local user.name actions-user
           git config --local user.email "actions@github.com"
           git add data/*
           git commit -am "GH ACTION Headlines $(date)"
-          git push origin main
+          git push origin ${GITHUB_REF##*/}
         env:
           REPO_KEY: ${{secrets.GITHUB_TOKEN}}
           username: github-actions
