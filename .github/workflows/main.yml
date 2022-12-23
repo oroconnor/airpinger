@@ -23,6 +23,9 @@ jobs:
       - name: Install packages
         run: |
           R -e 'install.packages("tidyverse")'
+          R -e 'install.packages("lubridate")'
+          R -e 'install.packages("httr")'
+          R -e 'install.packages("jsonlite")'
           
       # Run R script
       - name: Scrape
