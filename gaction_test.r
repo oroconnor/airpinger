@@ -113,9 +113,23 @@ get_raw_data = function(serial_number, data_points=NULL, start_date=NULL, end_da
 }
 
 
+##### -----  Below is the action data pull and munging
+
+
+wk <- read_csv("https://raw.githubusercontent.com/oroconnor/airpinger/main/data/datetime_lister.csv", col_types = "cddc") 
+
+
+wk <- wk %>%
+  mutate(
+    YMD = ymd_hms(YMD)
+  )
+
+# Find latest date in .csv file
+max_date <- max(wk$YMD)
+
 # Do a call to API to get rest of data
 # making time floor to start of hour so that it does not add partial hours to the spreadhseet
-data = get_data(serial_number =  serial_number, data_points=1)
+data = get_data(serial_number =  serial_number, data_points=NULL, start_date=max_date, end_date = floor_date(now("EST"), unit = "hours"))
 recent_data <- jsonlite::fromJSON(data) %>%
   # Need to make this section resilient to there being no new datapoints 
   select( #selects certain variables from dataset 
@@ -127,6 +141,31 @@ recent_data <- jsonlite::fromJSON(data) %>%
   ) 
 
 
+recent_data$timestamp_local <- ymd_hms(recent_data$timestamp_local)
+
+recent_data <- recent_data %>%
+  rename(
+    YMD = timestamp_local
+  )  %>%
+  mutate(
+    PM2.5 = as.numeric(PM2.5),
+    PM10 = as.numeric(PM10)
+  )
+
+# Compress to hourly
+
+recent_data_h <- recent_data %>%
+  group_by(YMD = cut(YMD, breaks="60 min")) %>%
+  summarize(
+    PM2.5 = mean(PM2.5,na.rm = TRUE),
+    PM10 = mean(PM10,na.rm = TRUE)
+  ) %>%
+  mutate(
+    YMD = ymd_hms(YMD),
+    sensor = "quantaq"
+  )
+
+
 
 
 
@@ -134,9 +173,9 @@ recent_data <- jsonlite::fromJSON(data) %>%
 
 
 # create a new row of data, with todayd's date and urls number
-row <- data.frame(Sys.time(), recent_data$PM2.5)
+#row <- data.frame(Sys.time(), recent_data$PM2.5)
 
-print(row)
+#print(row)
 
 # append at the end of the csv the new data
-write_csv(row,paste0('data/datetime_lister.csv'),append = T)   
+write_csv(recent_data_h,paste0('data/datetime_lister.csv'),append = T)   
